@@ -1,7 +1,7 @@
 Your task is to compose SQL queries for the following questions:
 
 Find all the robots from Star Wars.
---SELECT * FROM robots WHERE source = "Star Wars"
+SELECT * FROM robots WHERE source = 'Star Wars';
 
 
 Find the robot with an "anxious" personality.
@@ -9,47 +9,136 @@ intro_to_sql=# SELECT * FROM robots WHERE personality = 'anxious';
 
 
 Find all recipes that are nut free.
-
+ select * from recipes where nut_free is not null and nut_free = 't';
+ select * from recipes where nut_free = true;
 
 
 
 Count the number of recipes that are gluten free but not vegetarian.
 
+ select count(*) from recipes where gluten_free = true and vegetarian = false;
 
 
 
 Find the animal with the most legs.
+select max(number_of_legs) from animals;
+
+
+min::
+intro_to_sql=# select min(number_of_legs) from animals;
+
+STRETCH ::
+
+If we want to know the number of occurences of items in a table:
+
+*****AKA (GROUP)******
+
+intro_to_sql=# select number_of_legs, count(*) from animals group by
+
+ number_of_legs;
+ number_of_legs | count
+----------------+-------
+              8 |     1
+              2 |     4
+              4 |     3
+              0 |     2
+(4 rows)
 
 
 
 Find the board game that takes the least amount of time to play.
 
-
+select min(min_players) from board_games;
+ min
+-----
+   1
+(1 row)
 
 
 Find the recipe that takes the most time to prepare.
 
-
+intro_to_sql=# select max(minutes_required) from recipes;
+ max
+-----
+ 390
+(1 row)
 
 
 Find all the robots whose name starts with the letter M.
 
+intro_to_sql=# select name from robots where substring(name, 1,1) = 'M';
+      name
+----------------
+ Marvin
+ Mr. Butlertron
+(2 rows)
 
 
 
 Count the number of board games that can be played by 8 people.
 
+intro_to_sql=# select count(*) from board_games where min_players = 8 or  max_players = 8;
+ count
+-------
+     1
+(1 row)
 
 
 
 Find all animals that are swimming and egg-laying.
+
+intro_to_sql=# select * from animals where swimming = true and egg_laying = true;
+  name   | number_of_legs | flying | swimming | egg_laying | id
+---------+----------------+--------+----------+------------+----
+ octopus |              8 | f      | t        | t          |  3
+ duck    |              2 | t      | t        | t          |  4
+(2 rows)
 
 
 
 
 Find all animals that are swimming and egg-laying but not flying.
 
+intro_to_sql=# select * from animals where swimming = true and egg_laying = true and flying = false;
+  name   | number_of_legs | flying | swimming | egg_laying | id
+---------+----------------+--------+----------+------------+----
+ octopus |              8 | f      | t        | t          |  3
+(1 row)
 
 
 
 Find the board game that supports the largest number of people.
+select max(max_players) from board_games;
+max
+-----
+ 30
+(1 row)
+
+
+
+intro_to_sql=# select * from board_games order by max_players desc limit 1;
+          name          | max_players | min_players | category | mins_to_play | id
+------------------------+-------------+-------------+----------+--------------+----
+ Cards Against Humanity |          30 |           5 | party    |           30 |  8
+(1 row)
+
+
+
+
+
+intro_to_sql=# select * from board_games order by max_players desc;
+          name          | max_players | min_players |    category    | mins_to_play | id
+------------------------+-------------+-------------+----------------+--------------+----
+ Cards Against Humanity |          30 |           5 | party          |           30 |  8
+ Game of Things         |          15 |           2 | party          |           45 |  9
+ Arkham Horror          |           8 |           1 | strategy       |          240 |  1
+ 7 Wonders              |           7 |           2 | strategy       |           30 | 12
+ 7 Wonders              |           7 |           2 | strategy       |           30 |  5
+ Bohnanza               |           7 |           2 | light strategy |           45 |  7
+ Dixit                  |           6 |           3 | party          |           30 |  2
+ Carcassonne            |           5 |           2 | light strategy |           45 |  3
+ Sushi Go               |           5 |           2 | party          |           15 | 10
+ Agricola               |           5 |           1 | strategy       |          120 |  6
+ Quixo                  |           4 |           2 | abstract       |           15 | 11
+ Quarto                 |           2 |           2 | abstract       |           20 |  4
+(12 rows)
